@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  my-osrm-backend:
+    build: .
+    ports:
+      - "8080:8080"
+    command: osrm-routed --algorithm mld -t 32 --port 8080 /data/michigan-latest.osrm
