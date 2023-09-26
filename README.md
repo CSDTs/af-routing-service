@@ -20,6 +20,7 @@ This is a memory hog. Roughly takes 2GB solo, just for the single state. Midwest
 ## Route Optimization Testing
 (in progress)
 
+0) Perform the Set Up instructions; have the container running
 1) `source venv/bin/activate && pip install -r requirements.txt`
 2) `source set_env.sh` # get the API keys from a CSDT developer
 3) `pytest .` # all tests should pass

@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   my-osrm-backend:
+    container_name: my-osrm-backend
     build: .
     ports:
       - "8080:8080"
