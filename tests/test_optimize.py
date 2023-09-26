@@ -23,10 +23,12 @@ def expected_mi():
 @pytest.fixture
 def orms_client():
     return ors.Client(key=os.environ.get(KEY))
+    
 
 @pytest.fixture
 def af_client():
-    return ors.Client(base_url=AF_KEY) # could be the local container, MI based
+    #return ors.Client(base_url=os.environ.get(AF_KEY)) # could be the local container, MI based
+    return ors.Client('http://localhost:8080/')
 
 def reverse(arr):
     return [arr[1], arr[0]]
@@ -63,16 +65,30 @@ def mi_1j_1v_vehicle():
         )
     ]
 
-
-def test_1j_1v_optimization(orms_client, mi_1j_1v_job, mi_1j_1v_vehicle, expected_mi):
+def test_1j_1v_ors_optimization(orms_client, mi_1j_1v_job, mi_1j_1v_vehicle, expected_mi):
     """
     This is really a sanity check that service at minimum returns 
     what we'd expect in the simplest case; more of a check of
     argument order (lat lon vs lon lat), units of values
     """
 
-
     result = orms_client.optimization(
+        jobs=mi_1j_1v_job,
+        vehicles=mi_1j_1v_vehicle,
+        geometry=True
+    )
+
+    for key in ['unassigned','delivery', 'service']:
+        assert expected_mi['summary'][key] == result['summary'][key], f"{key} was not the same! expected_mi['summary'][{key}]={expected_mi[key]} vs result['summary'][{key}]={result[key]}"
+
+def test_1j_1v_local_optimization(af_client, mi_1j_1v_job, mi_1j_1v_vehicle, expected_mi):
+    """
+    This is really a sanity check that service at minimum returns 
+    what we'd expect in the simplest case; more of a check of
+    argument order (lat lon vs lon lat), units of values
+    """
+
+    result = af_client.optimization(
         jobs=mi_1j_1v_job,
         vehicles=mi_1j_1v_vehicle,
         geometry=True
